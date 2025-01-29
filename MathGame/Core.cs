@@ -1,6 +1,9 @@
 public static class Core
 {
-    private static Random random = new Random();
+    private static Random m_Random = new Random();
+
+    private static int m_Difficulty = 1;
+
     public static void Run(string[] args)
     {
         int option = -1;
@@ -95,31 +98,92 @@ public static class Core
             switch (operation)
             {
                 case '+':
-                    opA = random.Next(1000);
-                    opB = random.Next(1000);
-                    result = opA + opB;
+                    switch (m_Difficulty)
+                    {
+                        case 1:
+                            opA = m_Random.Next(101);
+                            opB = m_Random.Next(101);
+                            result = opA + opB;
+                            break;
+                        case 2:
+                            opA = m_Random.Next(10, 1001);
+                            opB = m_Random.Next(10, 1001);
+                            result = opA + opB;
+                            break;
+                        case 3:
+                            opA = m_Random.Next(100, 10001);
+                            opB = m_Random.Next(100, 10001);
+                            result = opA + opB;
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 case '-':
-                    opA = random.Next(1000);
-                    do
+                    switch (m_Difficulty)
                     {
-                        opB = random.Next(1000);
-                        result = opA - opB;
-                    } while (result < 0);
+                        case 1:
+                            opB = m_Random.Next(101);
+                            result = m_Random.Next(101);
+                            opA = opB + result;
+                            break;
+                        case 2:
+                            opB = m_Random.Next(10, 1001);
+                            result = m_Random.Next(10, 1001);
+                            opA = opB + result;
+                            break;
+                        case 3:
+                            opB = m_Random.Next(100, 10001);
+                            result = m_Random.Next(100, 10001);
+                            opA = opB + result;
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 case '*':
-                    opA = random.Next(100);
-                    opB = random.Next(100);
-                    result = opA * opB;
+                    switch (m_Difficulty)
+                    {
+                        case 1:
+                            opA = m_Random.Next(101);
+                            opB = m_Random.Next(11);
+                            result = opA * opB;
+                            break;
+                        case 2:
+                            opA = m_Random.Next(10, 1001);
+                            opB = m_Random.Next(0, 101);
+                            result = opA * opB;
+                            break;
+                        case 3:
+                            opA = m_Random.Next(100, 10001);
+                            opB = m_Random.Next(10, 1001);
+                            result = opA * opB;
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 case '/':
-                    do
+                    switch (m_Difficulty)
                     {
-                        opB = random.Next(100);
+                        case 1: // from 0 / 1 to 100 / 10
+                            opB = m_Random.Next(1, 11);
+                            result = m_Random.Next(11);
+                            opA = opB * result;
+                            break;
+                        case 2: // from 0 / 1 to 1000 / 100
+                            opB = m_Random.Next(1, 101);
+                            result = m_Random.Next(11);
+                            opA = opB * result;
+                            break;
+                        case 3: // from 100 / 10 to 10000 / 100
+                            opB = m_Random.Next(10, 101);
+                            result = m_Random.Next(10, 101);
+                            opA = opB * result;
+                            break;
+                        default:
+                            break;
                     }
-                    while (opB <= 0);
-                    result = random.Next(11);
-                    opA = opB * result;
                     break;
                 default:
                     break;
