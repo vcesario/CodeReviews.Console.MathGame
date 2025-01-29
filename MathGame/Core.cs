@@ -1,5 +1,22 @@
 public static class Core
 {
+    struct HistoryEntry
+    {
+        public char operation;
+        public int difficulty;
+        public float score;
+        public int duration;
+
+        public HistoryEntry(char operation, int difficulty, float score, int duration)
+        {
+            this.operation = operation;
+            this.difficulty = difficulty;
+            this.score = score;
+            this.duration = duration;
+        }
+    }
+
+    private static List<HistoryEntry> m_History = new List<HistoryEntry>();
     private static Random m_Random = new Random();
 
     private static readonly int k_NoOfRounds = 3;
@@ -33,6 +50,9 @@ public static class Core
                 case 6:
                     m_Difficulty = PromptDifficulty();
                     break;
+                case 7:
+                    ShowHistory();
+                    break;
                 default:
                     break;
             }
@@ -43,13 +63,16 @@ public static class Core
     {
         Console.Clear();
         PrintHeader();
+
         Console.WriteLine("1. Addition match");
         Console.WriteLine("2. Subtraction match");
         Console.WriteLine("3. Multiplication match");
         Console.WriteLine("4. Division match");
         Console.WriteLine("5. Random match");
         Console.WriteLine($"6. Change difficulty ({m_Difficulty})");
+        Console.WriteLine("7. See history");
         Console.WriteLine("0. Exit\n\n");
+
         Console.WriteLine("Enter menu option:\n");
 
         bool isValidOption = false;
@@ -84,13 +107,6 @@ public static class Core
         } while (!isValidOption);
 
         return option;
-    }
-
-    private static void ErasePreviousLine()
-    {
-        Console.SetCursorPosition(0, Console.CursorTop - 1);
-        Console.Write(new string(' ', Console.WindowWidth));
-        Console.SetCursorPosition(0, Console.CursorTop);
     }
 
     private static void RunMatch(char matchOperation)
@@ -228,6 +244,9 @@ public static class Core
         }
 
         float finalScore = (float)score / rounds * 100;
+
+        StoreMatch(matchOperation, m_Difficulty, finalScore, 0);
+
         ShowGameOver(finalScore);
     }
 
@@ -273,7 +292,7 @@ public static class Core
         PrintHeader();
 
         Console.WriteLine("\t\t* * *   G A M E   O V E R !   * * *\n\n");
-        Console.WriteLine($"Final score: {finalScore}%\n");
+        Console.WriteLine($"Final score: {finalScore.ToString("0.00")}%\n");
 
         Console.WriteLine("[Return to menu...]");
         Console.ReadLine();
@@ -313,9 +332,51 @@ public static class Core
 
         return option;
     }
+
+    private static void ShowHistory()
+    {
+        Console.Clear();
+        PrintHeader();
+
+        Console.WriteLine("\t\t\tMATCH HISTORY\n");
+
+        if (m_History.Count == 0)
+        {
+            Console.WriteLine("No matches found.\n");
+        }
+        else
+        {
+            Console.WriteLine(@"ID     MODE      DIFFICULTY  SCORE   DURATION");
+            for (int i = 0; i < m_History.Count; i++)
+            {
+                string modeLabel = "Multiply";
+                string difficultyLabel = "Medium";
+                Console.WriteLine(@$"{("#" + (i + 1).ToString()).PadRight(7)}{modeLabel.PadRight(10)}{difficultyLabel.PadRight(12)}"
+                    + @$"{(m_History[i].score.ToString("0.00") + "%").PadRight(8)}{m_History[i].duration}");
+            }
+            Console.WriteLine();
+        }
+
+        Console.WriteLine("[Return to menu...]");
+        Console.ReadLine();
+    }
+
+    private static void StoreMatch(char operation, int difficulty, float score, int duration)
+    {
+        HistoryEntry entry = new(operation, difficulty, score, duration);
+        m_History.Add(entry);
+    }
+
     private static void PrintHeader()
     {
         Console.WriteLine("= = = = =\tV I C T O R ' S   M A T H A P A L O O Z A\t= = = = =");
         Console.WriteLine("\n\n");
     }
+    private static void ErasePreviousLine()
+    {
+        Console.SetCursorPosition(0, Console.CursorTop - 1);
+        Console.Write(new string(' ', Console.WindowWidth));
+        Console.SetCursorPosition(0, Console.CursorTop);
+    }
+
 }
