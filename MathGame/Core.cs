@@ -26,6 +26,9 @@ public static class Core
                 case 4:
                     RunMatch('/');
                     break;
+                case 5:
+                    m_Difficulty = PromptDifficulty();
+                    break;
                 default:
                     break;
             }
@@ -40,6 +43,7 @@ public static class Core
         Console.WriteLine("2. Subtraction match");
         Console.WriteLine("3. Multiplication match");
         Console.WriteLine("4. Division match");
+        Console.WriteLine($"5. Change difficulty ({m_Difficulty})");
         Console.WriteLine("0. Exit\n\n");
         Console.WriteLine("Enter menu option:\n");
 
@@ -259,6 +263,40 @@ public static class Core
         Console.ReadLine();
     }
 
+    private static int PromptDifficulty()
+    {
+        Console.Clear();
+        PrintHeader();
+
+        Console.WriteLine($"Current difficulty: {m_Difficulty}\n");
+        Console.WriteLine("Enter new difficulty (1 - 3):\n");
+
+        bool isValidOption = false;
+        int option = 0;
+        do
+        {
+            string? input = Console.ReadLine();
+
+            if (string.IsNullOrEmpty(input))
+            {
+                ErasePreviousLine();
+            }
+            else
+            {
+                if (int.TryParse(input, out option) && option >= 1 && option <= 3)
+                {
+                    // ErasePreviousLine();
+                    isValidOption = true;
+                }
+                else
+                {
+                    ErasePreviousLine();
+                }
+            }
+        } while (!isValidOption);
+
+        return option;
+    }
     private static void PrintHeader()
     {
         Console.WriteLine("= = = = =\tV I C T O R ' S   M A T H A P A L O O Z A\t= = = = =");

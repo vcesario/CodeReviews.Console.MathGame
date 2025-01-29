@@ -3,7 +3,7 @@
 - [x] Sub and mult operations
 - [x] Div operation
 - [x] Define difficulty
-- [] Add Change difficulty option
+- [x] Add Change difficulty option
 - [] Random game option
 - [] See History
 
