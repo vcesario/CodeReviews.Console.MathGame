@@ -20,6 +20,9 @@ public static class Core
                 case 3:
                     RunMatch('*');
                     break;
+                case 4:
+                    RunMatch('/');
+                    break;
                 default:
                     break;
             }
@@ -33,6 +36,7 @@ public static class Core
         Console.WriteLine("1. Addition match");
         Console.WriteLine("2. Subtraction match");
         Console.WriteLine("3. Multiplication match");
+        Console.WriteLine("4. Division match");
         Console.WriteLine("0. Exit\n\n");
         Console.WriteLine("Enter menu option:\n");
 
@@ -107,6 +111,15 @@ public static class Core
                     opA = random.Next(100);
                     opB = random.Next(100);
                     result = opA * opB;
+                    break;
+                case '/':
+                    do
+                    {
+                        opB = random.Next(100);
+                    }
+                    while (opB <= 0);
+                    result = random.Next(11);
+                    opA = opB * result;
                     break;
                 default:
                     break;

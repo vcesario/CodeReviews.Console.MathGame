@@ -1,7 +1,7 @@
 - [x] Add operation
 - [x] Complete screen
 - [x] Sub and mult operations
-- [] Div operation
+- [x] Div operation
 - [] Define difficulty
 - [] Add Change difficulty option
 - [] Random game option
