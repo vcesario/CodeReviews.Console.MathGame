@@ -4,7 +4,7 @@
 - [x] Div operation
 - [x] Define difficulty
 - [x] Add Change difficulty option
-- [] Random game option
+- [x] Random game option
 - [] See History
 
 ABOUT GAME DIFFICULTY

@@ -2,6 +2,7 @@ public static class Core
 {
     private static Random m_Random = new Random();
 
+    private static readonly int k_NoOfRounds = 3;
     private static int m_Difficulty = 1;
 
     public static void Run(string[] args)
@@ -27,6 +28,9 @@ public static class Core
                     RunMatch('/');
                     break;
                 case 5:
+                    RunMatch('#');
+                    break;
+                case 6:
                     m_Difficulty = PromptDifficulty();
                     break;
                 default:
@@ -43,7 +47,8 @@ public static class Core
         Console.WriteLine("2. Subtraction match");
         Console.WriteLine("3. Multiplication match");
         Console.WriteLine("4. Division match");
-        Console.WriteLine($"5. Change difficulty ({m_Difficulty})");
+        Console.WriteLine("5. Random match");
+        Console.WriteLine($"6. Change difficulty ({m_Difficulty})");
         Console.WriteLine("0. Exit\n\n");
         Console.WriteLine("Enter menu option:\n");
 
@@ -88,18 +93,29 @@ public static class Core
         Console.SetCursorPosition(0, Console.CursorTop);
     }
 
-    private static void RunMatch(char operation)
+    private static void RunMatch(char matchOperation)
     {
         int score = 0;
-        int rounds = 3;
+        int rounds = k_NoOfRounds;
 
         for (int i = 0; i < rounds; i++)
         {
             int opA = 0;
             int opB = 0;
             int result = 0;
+            char roundOperation;
 
-            switch (operation)
+            if (matchOperation.Equals('#'))
+            {
+                char[] availableOperations = new char[] { '+', '-', '*', '/' };
+                roundOperation = availableOperations[m_Random.Next(availableOperations.Length)];
+            }
+            else
+            {
+                roundOperation = matchOperation;
+            }
+
+            switch (roundOperation)
             {
                 case '+':
                     switch (m_Difficulty)
@@ -193,7 +209,7 @@ public static class Core
                     break;
             }
 
-            int attempt = PromptOperation(opA, opB, operation, i + 1, rounds);
+            int attempt = PromptOperation(opA, opB, roundOperation, i + 1, rounds);
 
             Console.WriteLine($"Your answer:\t{attempt}");
             Console.WriteLine($"Right answer:\t{result}\n");
