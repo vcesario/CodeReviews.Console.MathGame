@@ -5,9 +5,9 @@ public static class Core
         public char operation;
         public int difficulty;
         public float score;
-        public int duration;
+        public TimeSpan duration;
 
-        public HistoryEntry(char operation, int difficulty, float score, int duration)
+        public HistoryEntry(char operation, int difficulty, float score, TimeSpan duration)
         {
             this.operation = operation;
             this.difficulty = difficulty;
@@ -19,7 +19,7 @@ public static class Core
     private static List<HistoryEntry> m_History = new List<HistoryEntry>();
     private static Random m_Random = new Random();
 
-    private static readonly int k_NoOfRounds = 3;
+    private static readonly int k_NoOfRounds = 7;
     private static int m_Difficulty = 1;
 
     public static void Run(string[] args)
@@ -113,6 +113,9 @@ public static class Core
     {
         int score = 0;
         int rounds = k_NoOfRounds;
+
+        DateTime startTime = DateTime.Now;
+        DateTime lastTime = DateTime.MinValue;
 
         for (int i = 0; i < rounds; i++)
         {
@@ -225,7 +228,7 @@ public static class Core
                     break;
             }
 
-            int attempt = PromptOperation(opA, opB, roundOperation, i + 1, rounds);
+            int attempt = PromptOperation(opA, opB, roundOperation, i + 1, rounds, startTime);
 
             Console.WriteLine($"Your answer:\t{attempt}");
             Console.WriteLine($"Right answer:\t{result}\n");
@@ -240,22 +243,25 @@ public static class Core
                 Console.Write("[Continue...]");
             }
 
+            lastTime = DateTime.Now;
             Console.ReadLine();
         }
 
         float finalScore = (float)score / rounds * 100;
+        TimeSpan matchDuration = lastTime - startTime;
 
-        StoreMatch(matchOperation, m_Difficulty, finalScore, 0);
+        StoreMatch(matchOperation, m_Difficulty, finalScore, matchDuration);
 
-        ShowGameOver(finalScore);
+        ShowGameOver(finalScore, matchDuration);
     }
 
-    private static int PromptOperation(int a, int b, char operation, int currentRound, int totalRounds)
+    private static int PromptOperation(int a, int b, char operation, int currentRound, int totalRounds, DateTime startTime)
     {
         Console.Clear();
         PrintHeader();
 
-        Console.WriteLine($"Round: {currentRound.ToString("D2")}/{totalRounds.ToString("D2")}\n");
+        Console.WriteLine($"Round: {currentRound.ToString("D2")}/{totalRounds.ToString("D2")}"
+            + $"\t\tTime elapsed: {(DateTime.Now - startTime).ToString(@"hh\:mm\:ss")}\n");
         Console.WriteLine($"{a} {operation} {b} = ?\n\n");
 
         bool isValidOption = false;
@@ -286,13 +292,13 @@ public static class Core
         return attempt;
     }
 
-    private static void ShowGameOver(float finalScore)
+    private static void ShowGameOver(float finalScore, TimeSpan duration)
     {
         Console.Clear();
         PrintHeader();
 
         Console.WriteLine("\t\t* * *   G A M E   O V E R !   * * *\n\n");
-        Console.WriteLine($"Final score: {finalScore.ToString("0.00")}%\n");
+        Console.WriteLine($"Final score:\t{finalScore.ToString("#.##")}%\nCompleted in:\t{duration.ToString(@"hh\:mm\:ss")}");
 
         Console.WriteLine("[Return to menu...]");
         Console.ReadLine();
@@ -349,10 +355,11 @@ public static class Core
             Console.WriteLine(@"ID     MODE      DIFFICULTY  SCORE   DURATION");
             for (int i = 0; i < m_History.Count; i++)
             {
-                string modeLabel = "Multiply";
-                string difficultyLabel = "Medium";
+                string modeLabel = OperationToLabel(m_History[i].operation);
+                string difficultyLabel = DifficultyToLabel(m_History[i].difficulty);
+
                 Console.WriteLine(@$"{("#" + (i + 1).ToString()).PadRight(7)}{modeLabel.PadRight(10)}{difficultyLabel.PadRight(12)}"
-                    + @$"{(m_History[i].score.ToString("0.00") + "%").PadRight(8)}{m_History[i].duration}");
+                    + @$"{(m_History[i].score.ToString("#.##") + "%").PadRight(8)}{m_History[i].duration.ToString(@"hh\:mm\:ss")}");
             }
             Console.WriteLine();
         }
@@ -361,7 +368,7 @@ public static class Core
         Console.ReadLine();
     }
 
-    private static void StoreMatch(char operation, int difficulty, float score, int duration)
+    private static void StoreMatch(char operation, int difficulty, float score, TimeSpan duration)
     {
         HistoryEntry entry = new(operation, difficulty, score, duration);
         m_History.Add(entry);
@@ -378,5 +385,34 @@ public static class Core
         Console.Write(new string(' ', Console.WindowWidth));
         Console.SetCursorPosition(0, Console.CursorTop);
     }
-
+    private static string OperationToLabel(char operation)
+    {
+        switch (operation)
+        {
+            case '+':
+                return "Add";
+            case '-':
+                return "Subtract";
+            case '*':
+                return "Multiply";
+            case '/':
+                return "Divide";
+            default:
+                return "Unknown";
+        }
+    }
+    private static string DifficultyToLabel(int difficulty)
+    {
+        switch (difficulty)
+        {
+            case 1:
+                return "Easy";
+            case 2:
+                return "Medium";
+            case 3:
+                return "Hard";
+            default:
+                return "Unknown";
+        }
+    }
 }

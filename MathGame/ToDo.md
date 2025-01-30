@@ -5,7 +5,7 @@
 - [x] Define difficulty
 - [x] Add Change difficulty option
 - [x] Random game option
-- [] See History
+- [x] See History
 - [] Final tweaks (round amount, division difficulty)
 
 ABOUT GAME DIFFICULTY
