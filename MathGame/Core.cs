@@ -326,7 +326,6 @@ public static class Core
             {
                 if (int.TryParse(input, out option) && option >= 1 && option <= 3)
                 {
-                    // ErasePreviousLine();
                     isValidOption = true;
                 }
                 else
