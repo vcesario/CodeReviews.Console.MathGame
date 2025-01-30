@@ -397,6 +397,8 @@ public static class Core
                 return "Multiply";
             case '/':
                 return "Divide";
+            case '#':
+                return "Random";
             default:
                 return "Unknown";
         }
